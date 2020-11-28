@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject losePanel;
     public MobileController mobilePad;
     public GameObject winPanel;
+    public SpatialGrid spatialGrid;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
         Main.Instance.adsManager = adsManager;
         Main.Instance.mobilePad = mobilePad;
         Main.Instance.winPanel = winPanel;
+        Main.Instance.spatialGrid = spatialGrid;
 
         UpdateManager.Instance.Initialize();
         RestartableManager.Instance.Initialize();

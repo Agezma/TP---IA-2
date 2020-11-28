@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 4579540065147193293}
   - component: {fileID: 6399991700036506361}
   - component: {fileID: 7061765733359405429}
+  - component: {fileID: 6555875606967098022}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -293,6 +294,7 @@ MonoBehaviour:
   Description: Standard turret. Low damage, high range
   prefabBullet: {fileID: -4444545684210812630, guid: e020e6b81880c7949aacab99f47ccda8,
     type: 3}
+  myQuery: {fileID: 6555875606967098022}
 --- !u!114 &7061765733359405429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +310,23 @@ MonoBehaviour:
   isBuyable: 0
   price: 15
   buildState: 0
+--- !u!114 &6555875606967098022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579540065147100141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13e56912cd12994d84bf893fd779f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBox: 0
+  radius: 25
+  targetGrid: {fileID: 0}
+  width: 15
+  height: 30
 --- !u!1 &4579540065147100143
 GameObject:
   m_ObjectHideFlags: 0

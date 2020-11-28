@@ -107,6 +107,7 @@ public class Spawner : MonoBehaviour, IUpdate, IRestartable
         {
             Enemy enemy = SpawnEnemy(wave[i]);
             Main.Instance.enemyManager.AddEnemy(enemy);
+            Main.Instance.spatialGrid.CheckEnts();
             yield return new WaitForSeconds(timeBetweenEnemies);
         }
         gameState = State.WaveInProgress;

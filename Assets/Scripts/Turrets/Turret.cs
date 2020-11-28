@@ -23,12 +23,19 @@ public abstract class Turret : MonoBehaviour
 
     public Bullet prefabBullet;
 
+    //IA2-P2
+    public float radius = 20f;
+    public SpatialGrid targetGrid;
+    public IEnumerable<GridEntity> selected = new List<GridEntity>();
+    IEnumerable<GridEntity> myEnemiesInRange;
 
-    public abstract void Shoot();
-    
+    public abstract void Shoot();    
 
     public virtual void Start()
     {
+        //IA2-P2
+        targetGrid = Main.Instance.spatialGrid;
+
         enemyManager = Main.Instance.enemyManager;
         state = GetComponent<TurretState>();
     }
@@ -50,17 +57,8 @@ public abstract class Turret : MonoBehaviour
 
         enemies = enemyManager.enemiesAlive;
 
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if (!enemiesInRange.Contains(enemies[i]))
-            {
-                AddEnemyInRange(enemies[i]);
-            }
-        }
-        for (int i = 0; i < enemiesInRange.Count; i++)
-        {
-            RemoveEnemyFromRange(enemiesInRange[i]);
-        }
+        //IA2-P2
+        enemiesInRange = Query().ToList();
 
         waitReloadTime += Time.deltaTime;
 
@@ -75,28 +73,20 @@ public abstract class Turret : MonoBehaviour
             waitReloadTime = 0;
         }
     }
-        
 
-    public void GetEnemies(List<Enemy> allEnemies)
+    //IA2-P2
+    public IEnumerable<Enemy> Query()
     {
-        enemies = allEnemies;
-    }
-
-    public void AddEnemyInRange(Enemy thisEnemy)
-    {
-        if (Vector3.Distance(thisEnemy.transform.position, transform.position) <= range && thisEnemy != null)
-        {
-            enemiesInRange.Add(thisEnemy); 
-        }
-    }
-
-    public void RemoveEnemyFromRange(Enemy thisEnemy)
-    {
-        if (!Main.Instance.enemyManager.enemiesAlive.Contains(thisEnemy) || (enemiesInRange.Contains(thisEnemy) && Vector3.Distance(thisEnemy.transform.position, transform.position) > range))
-        {
-            enemiesInRange.Remove(thisEnemy);
-            //print("Remove");
-        }
+        return targetGrid.Query(
+            transform.position + new Vector3(-radius, 0, -radius),
+            transform.position + new Vector3(radius, 0, radius),
+            x =>
+            {
+                var position2d = x - transform.position;
+                position2d.y = 0;
+                return position2d.sqrMagnitude < radius * radius;
+            })
+            .Select(x => x as Enemy);
     }
 
     public List<Enemy> FilterEnemysMaxLife()

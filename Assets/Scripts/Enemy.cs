@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IFixedUpdate, IRestartable
+public class Enemy : GridEntity, IFixedUpdate, IRestartable
 {
     protected Rigidbody _rb;
     public float speed;
     float startSpeed;
     public float attackRange;
-
 
     protected Base baseToAttack;
     protected Canvas worldCanvas;
@@ -62,6 +61,8 @@ public class Enemy : MonoBehaviour, IFixedUpdate, IRestartable
         {
             coliders.Add(item);
         }
+
+        StartCoroutine(UpdateGridCoRoutine());
     }
 
     void MoveToNextWaypoint(Waypoint current)
@@ -88,6 +89,15 @@ public class Enemy : MonoBehaviour, IFixedUpdate, IRestartable
         Move();
     }
 
+    IEnumerator UpdateGridCoRoutine()
+    {
+        while (true)
+        {
+            UpdateGrid();
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
     public void Attack(float damage)
     {
         baseToAttack.TakeDamage(damage);
@@ -103,7 +113,7 @@ public class Enemy : MonoBehaviour, IFixedUpdate, IRestartable
         else
         {
             MoveToNextWaypoint(currentWp);
-        }        
+        }
 
         if (life <= 0)
             _rb.velocity = Vector3.zero;
@@ -157,11 +167,12 @@ public class Enemy : MonoBehaviour, IFixedUpdate, IRestartable
         }
         //Main.Instance.mouseLock.UnlockMouse();
 
+        OnDestroyed.Invoke();
+
         yield return new WaitForSeconds(deathAnimTime);
 
         myMoney.money += moneyReward;
         Destroy(this.gameObject);
-
     }
 
     public void SetOnWaveEnd()

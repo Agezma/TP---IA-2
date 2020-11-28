@@ -31,4 +31,5 @@ public class Main
     public GameObject losePanel;
     public MobileController mobilePad;
     public GameObject winPanel;
+    public SpatialGrid spatialGrid;
 }
