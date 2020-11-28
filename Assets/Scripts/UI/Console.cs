@@ -105,8 +105,6 @@ public class Console : MonoBehaviour
                 return moneyToShow + acum;
             });
 
-        Debug.Log(moneyAcumulated);
-
         moneyToShowInUI.gameObject.SetActive(true);
         moneyToShowInUI.text = "+ " + moneyAcumulated;
 
