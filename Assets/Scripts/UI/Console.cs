@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using System;
 
 public class Console : MonoBehaviour
 {
     public Text consoleView;
     public InputField consoleInput;
+
+    public Text moneyToShowInUI;
 
     public delegate void Commands(params object[] parameterContainer);
     
@@ -93,10 +97,31 @@ public class Console : MonoBehaviour
     {
         var enemies = Main.Instance.enemyManager.enemiesAlive;
         consoleView.text += enemies.Count + " enemigos eliminados \n";
+
+        var moneyAcumulated = enemies.Aggregate(0f, (acum, current) =>
+            {
+                var moneyToShow = current.moneyReward;
+
+                return moneyToShow + acum;
+            });
+
+        Debug.Log(moneyAcumulated);
+
+        moneyToShowInUI.gameObject.SetActive(true);
+        moneyToShowInUI.text = "+ " + moneyAcumulated;
+
         while(enemies.Count > 0)
         {
             enemies[0].TakeDamage(1000);
         }
+
+        StartCoroutine(ShowMoneyAgregated());
+    }
+
+    public IEnumerator ShowMoneyAgregated()
+    {
+        yield return new WaitForSeconds(4);
+        moneyToShowInUI.gameObject.SetActive(false);
     }
 
     void Kill(params object[] paramters)
