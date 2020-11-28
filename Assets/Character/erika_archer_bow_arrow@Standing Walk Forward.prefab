@@ -976,7 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 1
-  speed: 3
+  speed: 6
   gold: 20
   anim: {fileID: 5623894409016050812}
   charAttack: {fileID: 798734752}

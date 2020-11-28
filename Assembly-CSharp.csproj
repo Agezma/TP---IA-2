@@ -62,14 +62,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\IA2 Things\EventFSM.cs" />
     <Compile Include="Assets\IA2 Things\FList.cs" />
+    <Compile Include="Assets\IA2 Things\FSM\EventFSM.cs" />
+    <Compile Include="Assets\IA2 Things\FSM\State.cs" />
+    <Compile Include="Assets\IA2 Things\FSM\StateConfigurer.cs" />
+    <Compile Include="Assets\IA2 Things\FSM\Transition.cs" />
     <Compile Include="Assets\IA2 Things\Grid\GridEntity.cs" />
     <Compile Include="Assets\IA2 Things\Grid\Queries.cs" />
     <Compile Include="Assets\IA2 Things\Grid\SpatialGrid.cs" />
-    <Compile Include="Assets\IA2 Things\State.cs" />
-    <Compile Include="Assets\IA2 Things\StateConfigurer.cs" />
-    <Compile Include="Assets\IA2 Things\Transition.cs" />
     <Compile Include="Assets\IA2 Things\Utility.cs" />
     <Compile Include="Assets\ParticleDestroy.cs" />
     <Compile Include="Assets\Scripts\Base.cs" />

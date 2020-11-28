@@ -225,7 +225,7 @@ public class SpatialGrid : MonoBehaviour
             {
                 foreach(var neighbour in allElems.Where(x => x != ent))
                 {
-                    Gizmos.DrawLine(ent.transform.position, neighbour.transform.position);
+                    //Gizmos.DrawLine(ent.transform.position, neighbour.transform.position);
                     connections++;
                 }
                 if(showLogs)

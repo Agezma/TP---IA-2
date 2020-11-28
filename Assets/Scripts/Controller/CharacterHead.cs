@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IA2;
 
-public class CharacterHead : MonoBehaviour, IUpdate, IFixedUpdate
+public class CharacterHead : MonoBehaviour, IUpdate
 {
     Rigidbody _rb;
     public float force;
@@ -24,75 +25,142 @@ public class CharacterHead : MonoBehaviour, IUpdate, IFixedUpdate
 
     public AudioSource audioS;
 
+    public EventFSM<PlayerInputs> fsm;
+
     void Awake()
     {
         _rb = GetComponentInChildren<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         charAttack.anim = anim;
-
     }
-
+    
     void Start()
-    {
-        /*if (Application.platform == RuntimePlatform.Android)
-        {
-            mobilePad.gameObject.SetActive(true);
-            controller =  Main.Instance.mobilePad;
-
-        }
-        else
-        {
-            mobilePad.gameObject.SetActive(false);
-            controller = new ComputerController();
-        }*/
-        controller = Main.Instance.mobilePad;
+    {           
+        controller = new ComputerController();
 
         initDamage = charAttack.damage;
         initialSpeed = speed;
         animSpeed = 1;
-        UpdateManager.Instance.AddFixedUpdate(this);
         UpdateManager.Instance.AddUpdate(this);
+
+        FSMConfiguration();
     }
 
-    public void OnFixedUpdate()
+
+    public void FSMConfiguration()
+    {
+        var idle = new State<PlayerInputs>("Idle");
+        var move = new State<PlayerInputs>("Move");
+        var chargeAttack = new State<PlayerInputs>("ChargeAttack");
+        var releaseAttack = new State<PlayerInputs>("ReleaseAttack");
+
+        StateConfigurer.Create(idle)
+            .SetTransition(PlayerInputs.move, move)
+            .SetTransition(PlayerInputs.chargeAttack, chargeAttack)
+            .Done();
+
+        StateConfigurer.Create(move)
+            .SetTransition(PlayerInputs.idle, idle)
+            .SetTransition(PlayerInputs.chargeAttack, chargeAttack)
+            .Done();
+
+        StateConfigurer.Create(chargeAttack)
+            .SetTransition(PlayerInputs.releaseAttack, releaseAttack)
+            .Done();
+
+        StateConfigurer.Create(releaseAttack)
+            .SetTransition(PlayerInputs.idle, idle)
+            .SetTransition(PlayerInputs.move, move)
+            .Done();
+
+
+
+        idle.OnUpdate += () =>
+        {
+            if (controller.HorizontalSpeed() != 0 || controller.VerticalSpeed() != 0)
+                fsm.SendInput(PlayerInputs.move);
+            else if (controller.AttackStart())
+                fsm.SendInput(PlayerInputs.chargeAttack);
+        };     
+
+        move.OnUpdate += () =>
+        {
+            if (controller.HorizontalSpeed() == 0 && controller.VerticalSpeed() == 0)
+                fsm.SendInput(PlayerInputs.idle);
+            else if (controller.AttackStart())
+                fsm.SendInput(PlayerInputs.chargeAttack);
+        };
+
+        move.OnFixedUpdate += () =>
+        {
+            MoveChar();
+        };
+
+        chargeAttack.OnEnter += (x) => OnAttackStart();
+
+        chargeAttack.OnUpdate += () =>
+        {
+            if (controller.AttackRelease())
+                fsm.SendInput(PlayerInputs.releaseAttack);
+        };
+        chargeAttack.OnFixedUpdate += () =>
+        {
+            MoveChar();
+        };
+
+        releaseAttack.OnEnter += (x) => OnAttackReleased();
+
+        releaseAttack.OnUpdate += () =>
+        {
+            if (controller.HorizontalSpeed() == 0 && controller.VerticalSpeed() == 0)
+                fsm.SendInput(PlayerInputs.idle);
+            else 
+                fsm.SendInput(PlayerInputs.move);
+        };
+        
+        fsm = new EventFSM<PlayerInputs>(idle);
+    }
+
+    public void MoveChar()
     {
         _rb.velocity = (transform.forward * controller.VerticalSpeed() + transform.right * controller.HorizontalSpeed()) * speed;
         anim.SetFloat("VerticalSpeed", (controller.VerticalSpeed() * animSpeed));
         anim.SetFloat("HorizontalSpeed", (controller.HorizontalSpeed() * animSpeed));
-
         anim.SetFloat("AimWalk", Mathf.Clamp(Mathf.Abs(controller.VerticalSpeed()) + Mathf.Abs(controller.HorizontalSpeed()),0,1));
     }
 
+    public void OnAttackStart()
+    {
+        charAttack.damage = initDamage;
+        charAttack.chargedTime = 0f;
+
+        if (charAttack.isAttacking) return;
+
+        animFinished = false;
+        attackReleased = false;
+        charAttack.StartAttack();
+        speed = initialSpeed / 2.5f;
+        animSpeed = 0.5f;
+    }
+    public void OnAttackReleased()
+    {
+        if (animFinished && charAttack.chargedTime > 1f)
+            charAttack.damage = initDamage * 5f;
+        else
+            attackReleased = true;
+
+        anim.SetBool("AttackRelease", true);
+        StartCoroutine(SpeedReturn());
+    }
     public void OnUpdate()
     {
-        if (controller.AttackStart())
-        {
-            charAttack.damage = initDamage;
-            charAttack.chargedTime = 0f;
+        fsm.Update();
+        Debug.Log(fsm.Current.Name);
+    }
 
-            if (charAttack.isAttacking) return;
-
-            animFinished = false;
-            attackReleased = false;
-            charAttack.StartAttack();
-            speed = initialSpeed / 5f;
-            animSpeed = 0.5f;
-        }
-        if (controller.AttackRelease() && charAttack.isAttacking && !animFinished)
-        {            
-            attackReleased = true;
-            anim.SetBool("AttackRelease", true);
-            StartCoroutine(SpeedReturn());
-        }
-        else if(controller.AttackRelease() && charAttack.isAttacking && animFinished)
-        {
-            if(charAttack.chargedTime > 1f)
-            {
-                charAttack.damage = initDamage * 5f;
-            }
-            anim.SetBool("AttackRelease", true);
-            StartCoroutine(SpeedReturn());
-        }
+    public void FixedUpdate()
+    {
+        fsm.FixedUpdate();
     }
 
     IEnumerator SpeedReturn()
@@ -133,3 +201,10 @@ public class CharacterHead : MonoBehaviour, IUpdate, IFixedUpdate
     }
 }
     
+public enum PlayerInputs
+{
+    idle,
+    move,
+    chargeAttack,
+    releaseAttack
+}

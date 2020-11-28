@@ -24,7 +24,7 @@ public class CameraRotatorY : MonoBehaviour
             myController =  Main.Instance.mobilePad;
         else
             myController = new ComputerController();*/
-        myController = Main.Instance.mobilePad;
+        myController = new ComputerController();
     }
 
     private void Update()

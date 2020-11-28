@@ -5,7 +5,6 @@ using UnityEngine;
 public class CameraRotator : MonoBehaviour
 {
     float speed = 5f;
-
     public float timeLerp = 0.1f;
     public GameObject myWeapon;
     public Camera myCamera;
@@ -19,17 +18,17 @@ public class CameraRotator : MonoBehaviour
             myController =  Main.Instance.mobilePad;
         else
             myController = new ComputerController();*/
-        myController = Main.Instance.mobilePad;
+        myController = new ComputerController();
     }
 
-    void  FixedUpdate()
-    {        
+    void FixedUpdate()
+    {
         RotateCamera();
     }
 
     void RotateCamera()
-    {   
-        transform.position += (transform.forward * myController.VerticalSpeed() + transform.right * myController.HorizontalSpeed()) * speed * Time.deltaTime ;
+    {
+        //transform.position += (transform.forward * myController.VerticalSpeed() + transform.right * myController.HorizontalSpeed()) * speed * Time.deltaTime;
 
         float mouseX = myController.HorizontalCameraSpeed() * mouseSensivity;
         float mouseY = myController.VerticalCameraSpeed() * mouseSensivity;
@@ -37,7 +36,7 @@ public class CameraRotator : MonoBehaviour
         Vector3 rotateBodyVector3 = transform.rotation.eulerAngles;
         rotateBodyVector3.y += mouseX;
 
-        
+
         transform.rotation = Quaternion.Euler(rotateBodyVector3);
     }
 }

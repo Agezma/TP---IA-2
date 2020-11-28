@@ -11,7 +11,7 @@ public class StartMessage : MonoBehaviour,IUpdate
     void Start()
     {
         UpdateManager.Instance.AddUpdate(this);
-        controller = Main.Instance.mobilePad;
+        controller = new ComputerController();
     }
 
     public void OnUpdate()

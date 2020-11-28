@@ -21,7 +21,7 @@ public class UIController : MonoBehaviour, IUpdate
             mobilePad.gameObject.SetActive(false);
             controller = new ComputerController();
         }*/
-        controller = Main.Instance.mobilePad;
+        controller = new ComputerController();
     }
 
     public void OnUpdate ()

@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour, IUpdate, IRestartable
         GenerateWaves();
         StartCoroutine(checkEnemy());
 
-        controller = Main.Instance.mobilePad;
+        controller = new ComputerController();
         nextWave = 0;
     }
 
@@ -109,11 +109,11 @@ public class Spawner : MonoBehaviour, IUpdate, IRestartable
             Main.Instance.enemyManager.AddEnemy(enemy);
             Main.Instance.spatialGrid.CheckEnts();
             yield return new WaitForSeconds(timeBetweenEnemies);
+
         }
         gameState = State.WaveInProgress;
         nextWave += 1;
         yield break;
-
     }
 
     Enemy SpawnEnemy(Enemy enemyToSpawn)
