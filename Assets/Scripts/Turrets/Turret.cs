@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
 public abstract class Turret : MonoBehaviour
 {
@@ -96,5 +98,43 @@ public abstract class Turret : MonoBehaviour
             //print("Remove");
         }
     }
+
+    public List<Enemy> FilterEnemysMaxLife()
+    {
+        return enemiesInRange.Where(x => !x.isDragon).OrderBy(x => x.life).ToList();
+    }
+
+    public List<Enemy> FilterEnemysMaxMoney()
+    {
+        return enemiesInRange.OrderBy(x => x.moneyReward).ToList();
+    }
+
+    public List<Enemy> FilterEnemysShootOnlyOnce()
+    {
+        return enemiesInRange.Skip(1).ToList();
+    }
+
+    /*public List<Enemy> EnemysInRangeFilter()
+    {
+        return enemiesInRange.Zip(enemies,(enemiesInRange, enemies) => enemiesInRange).ToList();
+    }*/
+
+
+    /*public List<Enemy> FilterEnemysShootOnlyOnce()
+    {
+        return enemiesInRange..ToList();
+    }*/
+
+
+
+    /*
+     * select:				()
+        where:				(V)
+        aggregate:			(?)
+        orderBy:			(V)
+        selectMany/Concat:		()
+        zip:				(?)
+        take/TakeWhile/Skip/SkipWhile:	(V)
+*/
 }
 
