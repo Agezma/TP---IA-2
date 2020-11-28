@@ -6,5 +6,6 @@ using UnityEngine.UI;
 public class InfoTurret : MonoBehaviour
 {
     public Text myName;
-    public Text info;  
+    public Text info;
+    public Text filterSelected;
 }

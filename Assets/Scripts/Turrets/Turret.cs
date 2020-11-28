@@ -21,6 +21,9 @@ public abstract class Turret : MonoBehaviour
     public string TurretName;
     public string Description;
 
+    public string filterSelected;
+    public string filterInfo;
+
     public Bullet prefabBullet;
 
     //IA2-P2
@@ -118,12 +121,12 @@ public abstract class Turret : MonoBehaviour
 
 
     /*
-     * select:				()
-        where:				(V)
-        aggregate:			(?)
-        orderBy:			(V)
-        selectMany/Concat:		()
-        zip:				(?)
+     * select:			            	(V)
+        where:				            (V)
+        aggregate:			            (?)
+        orderBy:			            (V)
+        selectMany/Concat:		        ()
+        zip:				            (?)
         take/TakeWhile/Skip/SkipWhile:	(V)
 */
 }
