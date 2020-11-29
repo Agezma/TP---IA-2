@@ -31,7 +31,6 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
     public Waypoint nextWp;
     public GameObject coliderContainter;
     protected List<Collider> coliders = new List<Collider>();
-    public bool isDragon = false;
     private ChangeScene scene;
     [HideInInspector] public bool isDead = false;
 
@@ -123,16 +122,14 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
         anim.SetFloat("Speed", _rb.velocity.magnitude / startSpeed);
     }
 
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         if (isDead) return;
 
         life -= damage;
         myLifeBar.UpdateLife();
-        if (!isDragon)
-        {
-            speed -= startSpeed / startLife;
-        }
+
+        speed -= startSpeed / startLife;        
 
         if (life <= 0)
         {

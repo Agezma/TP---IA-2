@@ -8,12 +8,20 @@ public class Dragon : Enemy
     public ParticleSystem firePS;
 
     public GameObject flyColiders;
-
-    new void Start()
+       
+    public override void TakeDamage(float damage)
     {
-        base.Start();   
-        isDragon = true;
+        if (isDead) return;
+
+        life -= damage;
+        myLifeBar.UpdateLife();
+
+        if (life <= 0)
+        {
+            StartCoroutine(Die());
+        }
     }
+
 
     public void FireAttack()
     {

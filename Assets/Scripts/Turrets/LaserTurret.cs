@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class LaserTurret : Turret
 {
@@ -12,11 +13,12 @@ public class LaserTurret : Turret
     }
     public override void DoShoot()
     {
-        if (enemiesInRange.Count > 0 && !prefabBullet.isActiveAndEnabled)
+        //IA2-P1 linq? aunque el any no era necesario
+        if (enemiesInRange.Any() && !prefabBullet.isActiveAndEnabled)
         {
             Shoot();
         }
-        else if(enemiesInRange.Count <= 0 && prefabBullet.isActiveAndEnabled) prefabBullet.gameObject.SetActive(false);
+        else if(!enemiesInRange.Any() && prefabBullet.isActiveAndEnabled) prefabBullet.gameObject.SetActive(false);
     }
 
     public override void Shoot()

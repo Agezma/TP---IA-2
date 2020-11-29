@@ -12,8 +12,7 @@ public abstract class Turret : MonoBehaviour
     public float range;
     public Transform bulletSpawnPos;
     public GameObject partToRotate;
-    public List<Enemy> enemiesInRange = new List<Enemy>();
-    [HideInInspector] public List<Enemy> enemies;
+
     [HideInInspector] public EnemyManager enemyManager;
 
     TurretState state;
@@ -30,7 +29,7 @@ public abstract class Turret : MonoBehaviour
     public float radius = 20f;
     public SpatialGrid targetGrid;
     public IEnumerable<GridEntity> selected = new List<GridEntity>();
-    IEnumerable<GridEntity> myEnemiesInRange;
+    public IEnumerable<Enemy> enemiesInRange = new List<Enemy>();
 
     public abstract void Shoot();    
 
@@ -42,35 +41,30 @@ public abstract class Turret : MonoBehaviour
         enemyManager = Main.Instance.enemyManager;
         state = GetComponent<TurretState>();
     }
-    public void Aim()
+    public void Aim(Enemy enemy)
     {
-        if (enemiesInRange.Count <= 0 )
-            return;
-
-        if(enemiesInRange[0] != null)
+        if (enemy != null )
         {
-            partToRotate.transform.LookAt(new Vector3(enemiesInRange[0].transform.position.x, this.transform.position.y, enemiesInRange[0].transform.position.z));
+            partToRotate.transform.LookAt(new Vector3(enemy.transform.position.x, transform.position.y, enemy.transform.position.z));
         }
     }
     private void Update()
     {
         if (state.buildState != TurretState.state.built) return;
-
-        Aim();
-
-        enemies = enemyManager.enemiesAlive;
+        
 
         //IA2-P2
         enemiesInRange = targetGrid.EnemyQuery( transform.position, radius ).Where(x=>!x.isDead).ToList();
+        Aim(enemiesInRange.FirstOrDefault());
 
+        
         waitReloadTime += Time.deltaTime;
-
         DoShoot();
     }
 
     public virtual void DoShoot()
     {
-        if (waitReloadTime >= reloadTime && enemiesInRange.Count > 0)
+        if (waitReloadTime >= reloadTime && enemiesInRange.Any())
         {
             Shoot();
             waitReloadTime = 0;
@@ -79,7 +73,12 @@ public abstract class Turret : MonoBehaviour
 
     public List<Enemy> FilterEnemysMaxLife()
     {
-        return enemiesInRange.Where(x => !x.isDragon).OrderBy(x => x.life).ToList();
+        return enemiesInRange.OrderBy(x => x.life).ToList();
+    }
+
+    public Enemy FilterByMaxLife()
+    {
+        return enemiesInRange.OrderBy(x => x.life).First();
     }
 
     public List<Enemy> FilterEnemysMaxMoney()

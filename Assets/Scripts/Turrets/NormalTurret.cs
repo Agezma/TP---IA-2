@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class NormalTurret : Turret
 {
@@ -11,8 +12,9 @@ public class NormalTurret : Turret
         bullet.transform.position = bulletSpawnPos.position;
         bullet.transform.forward = bulletSpawnPos.transform.forward;
 
-        if(enemiesInRange.Count > 0)
-            bullet.target = enemiesInRange[0].transform;
+        //IA2-P1
+        if(enemiesInRange.Any())
+            bullet.target = enemiesInRange.First().transform;
 
         bullet.damage = damage;                
     }    

@@ -84,7 +84,7 @@ public class Spawner : MonoBehaviour, IUpdate, IRestartable
                 startMessage.text = "Wave completed";
                 yield return new WaitForSeconds(2f);
                 if (nextWave < wavesQuantity)
-                    startMessage.text = "Click here to start next round";
+                    startMessage.text = "Press CTRL to start next round";
                 else
                 {
                     gameState = State.LevelCompleted;
