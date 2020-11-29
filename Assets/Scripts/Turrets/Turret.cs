@@ -61,7 +61,7 @@ public abstract class Turret : MonoBehaviour
         enemies = enemyManager.enemiesAlive;
 
         //IA2-P2
-        enemiesInRange = Query().ToList();
+        enemiesInRange = targetGrid.EnemyQuery( transform.position, radius ).Where(x=>!x.isDead).ToList();
 
         waitReloadTime += Time.deltaTime;
 
@@ -75,22 +75,7 @@ public abstract class Turret : MonoBehaviour
             Shoot();
             waitReloadTime = 0;
         }
-    }
-
-    //IA2-P2
-    public IEnumerable<Enemy> Query()
-    {
-        return targetGrid.Query(
-            transform.position + new Vector3(-radius, 0, -radius),
-            transform.position + new Vector3(radius, 0, radius),
-            x =>
-            {
-                var position2d = x - transform.position;
-                position2d.y = 0;
-                return position2d.sqrMagnitude < radius * radius;
-            })
-            .Select(x => x as Enemy);
-    }
+    }      
 
     public List<Enemy> FilterEnemysMaxLife()
     {

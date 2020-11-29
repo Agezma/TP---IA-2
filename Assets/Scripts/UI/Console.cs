@@ -95,23 +95,19 @@ public class Console : MonoBehaviour
 
     void KillAll(params object[] paramters)
     {
-        var enemies = Main.Instance.enemyManager.enemiesAlive;
-        consoleView.text += enemies.Count + " enemigos eliminados \n";
+        var enemies = Main.Instance.enemyManager.enemiesAlive.Zip(Main.Instance.enemyManager.enemiesAlive.Select(x => x.moneyReward), (x, y) => Tuple.Create(x, y)).ToArray();
 
         var moneyAcumulated = enemies.Aggregate(0f, (acum, current) =>
             {
-                var moneyToShow = current.moneyReward;
+                current.Item1.TakeDamage(1000);
 
-                return moneyToShow + acum;
+                return acum + current.Item2;
             });
 
         moneyToShowInUI.gameObject.SetActive(true);
         moneyToShowInUI.text = "+ " + moneyAcumulated;
-
-        while(enemies.Count > 0)
-        {
-            enemies[0].TakeDamage(1000);
-        }
+        
+        consoleView.text += enemies.Count() + " enemigos eliminados \n";
 
         StartCoroutine(ShowMoneyAgregated());
     }
@@ -124,17 +120,24 @@ public class Console : MonoBehaviour
 
     void Kill(params object[] paramters)
     {
-        var enemies = Main.Instance.enemyManager.enemiesAlive;
-        
-        int aux = (int)paramters[0];
-        if (aux > enemies.Count) aux = enemies.Count;
+        var enemies = Main.Instance.enemyManager.enemiesAlive
+            .Zip(Main.Instance.enemyManager.enemiesAlive.Select(x => x.moneyReward), (x, y) => Tuple.Create(x, y))
+            .Take((int) paramters[0])
+            .ToArray();
 
-        consoleView.text += aux + " enemigos eliminados \n";
-
-        for (int i = 0; i < aux; i++)
+        var moneyAcumulated = enemies.Aggregate(0f, (acum, current) =>
         {
-            enemies[0].TakeDamage(1000);
-        }
+            current.Item1.TakeDamage(1000);
+
+            return acum + current.Item2;
+        });
+
+        moneyToShowInUI.gameObject.SetActive(true);
+        moneyToShowInUI.text = "+ " + moneyAcumulated;
+
+        consoleView.text += enemies.Count() + " enemigos eliminados \n";
+
+        StartCoroutine(ShowMoneyAgregated());
     }
 
     void ChangeScene(params object[] paramters)

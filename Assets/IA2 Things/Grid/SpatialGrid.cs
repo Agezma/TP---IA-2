@@ -139,6 +139,21 @@ public class SpatialGrid : MonoBehaviour
             ).Where(x => filterByPosition(x.transform.position));
     }
 
+    // IA2-P2 Agregado para usar los enemigos en rango
+    public IEnumerable<Enemy> EnemyQuery(Vector3 myPos, float radius)
+    {
+        return Query(
+            myPos + new Vector3(-radius, 0, -radius),
+            myPos + new Vector3(radius, 0, radius),
+            x =>
+            {
+                var position2d = x - myPos;
+                position2d.y = 0;
+                return position2d.sqrMagnitude < radius * radius;
+            })
+            .Select(x => x as Enemy);
+    }
+
     public Tuple<int, int> GetPositionInGrid(Vector3 pos)
     {
         //quita la diferencia, divide segun las celdas y floorea

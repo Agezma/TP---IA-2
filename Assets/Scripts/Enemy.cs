@@ -33,7 +33,7 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
     protected List<Collider> coliders = new List<Collider>();
     public bool isDragon = false;
     private ChangeScene scene;
-    bool isDead = false;
+    [HideInInspector] public bool isDead = false;
 
     void Awake()
     {

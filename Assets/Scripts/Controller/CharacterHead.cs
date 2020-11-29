@@ -25,6 +25,7 @@ public class CharacterHead : MonoBehaviour, IUpdate
 
     public AudioSource audioS;
 
+    // IA2-P3
     public EventFSM<PlayerInputs> fsm;
 
     void Awake()
@@ -155,7 +156,6 @@ public class CharacterHead : MonoBehaviour, IUpdate
     public void OnUpdate()
     {
         fsm.Update();
-        Debug.Log(fsm.Current.Name);
     }
 
     public void FixedUpdate()

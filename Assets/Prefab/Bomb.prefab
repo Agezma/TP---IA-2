@@ -4875,7 +4875,7 @@ MonoBehaviour:
   damage: 10
   lifeTime: 3
   target: {fileID: 0}
-  range: 10
+  radius: 12
   explosion: {fileID: 4451132964012014419}
 --- !u!135 &9151718970095008890
 SphereCollider:

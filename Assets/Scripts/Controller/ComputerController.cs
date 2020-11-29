@@ -42,6 +42,6 @@ public class ComputerController: IController
 
     public bool OpenConsole()
     {
-        return Input.GetKeyDown(KeyCode.F12);
+        return Input.GetKeyDown(KeyCode.Escape);
     }
 }

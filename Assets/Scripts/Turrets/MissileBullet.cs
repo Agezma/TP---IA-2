@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class MissileBullet : TurretBullet
 {
-    public float range;
+    public float radius;
     public ParticleSystem explosion;
 
     public override void Start()
@@ -19,14 +20,10 @@ public class MissileBullet : TurretBullet
         explosion.Play();
         explosion.GetComponent<ParticleDestroy>().DestroyThis();
 
-        var inRange = Physics.OverlapSphere(transform.position, range);
-        for (int i = 0; i < inRange.Length; i++)
+        Debug.Log( Main.Instance.spatialGrid.EnemyQuery(transform.position, radius).Count());
+        foreach (var item in Main.Instance.spatialGrid.EnemyQuery(transform.position, radius).ToList() )
         {
-            if (inRange[i].GetComponentInParent<Enemy>())
-            {
-                inRange[i].GetComponentInParent<Enemy>().TakeDamage(damage);
-            }
+            item.TakeDamage(damage);
         }
-    }
-
+    } 
 }
