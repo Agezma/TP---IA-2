@@ -31,7 +31,7 @@ public abstract class Turret : MonoBehaviour
     public IEnumerable<GridEntity> selected = new List<GridEntity>();
     public IEnumerable<Enemy> enemiesInRange = new List<Enemy>();
 
-    public abstract void Shoot();    
+    public abstract void Shoot(Enemy enemy);    
 
     public virtual void Start()
     {
@@ -59,14 +59,14 @@ public abstract class Turret : MonoBehaviour
 
         
         waitReloadTime += Time.deltaTime;
-        DoShoot();
+        DoShoot(enemiesInRange.FirstOrDefault());
     }
 
-    public virtual void DoShoot()
+    public virtual void DoShoot(Enemy enemy)
     {
         if (waitReloadTime >= reloadTime && enemiesInRange.Any())
         {
-            Shoot();
+            Shoot(enemy);
             waitReloadTime = 0;
         }
     }      

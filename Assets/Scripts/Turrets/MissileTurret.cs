@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MissileTurret : NormalTurret
 {
-    public override void Shoot()
+    public override void Shoot(Enemy enemy)
     {
-        base.Shoot();
+        base.Shoot(enemy);
     }
 
 }

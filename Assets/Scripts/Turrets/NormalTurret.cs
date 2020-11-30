@@ -5,7 +5,7 @@ using System.Linq;
 
 public class NormalTurret : Turret
 {
-    public override void Shoot()
+    public override void Shoot(Enemy enemy)
     { 
         TurretBullet bullet = (TurretBullet)Instantiate(prefabBullet);
         //UpdateManager.Instance.AddFixedUpdate(bullet.GetComponent<IFixedUpdate>());
@@ -13,8 +13,8 @@ public class NormalTurret : Turret
         bullet.transform.forward = bulletSpawnPos.transform.forward;
 
         //IA2-P1
-        if(enemiesInRange.Any())
-            bullet.target = enemiesInRange.First().transform;
+        if(enemy != null)
+            bullet.target = enemy.transform;
 
         bullet.damage = damage;                
     }    
