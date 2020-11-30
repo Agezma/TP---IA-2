@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IA2;
 
-public class Enemy : GridEntity, IFixedUpdate, IRestartable
+public class Enemy : GridEntity,IUpdate, IFixedUpdate, IRestartable
 {
     protected Rigidbody _rb;
     public float speed;
@@ -34,6 +35,10 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
     private ChangeScene scene;
     [HideInInspector] public bool isDead = false;
 
+        
+    // IA2-P3
+    public EventFSM<EnemyStates> fsm;
+
     void Awake()
     {
         startSpeed = speed;
@@ -51,6 +56,7 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
         baseToAttack = Main.Instance.baseToAttack;
         myMoney = Main.Instance.myMoneyManager;
 
+        UpdateManager.Instance.AddUpdate(this);
         UpdateManager.Instance.AddFixedUpdate(this);
         RestartableManager.Instance.AddRestartable(this);
 
@@ -62,6 +68,69 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
         }
 
         StartCoroutine(UpdateGridCoRoutine());
+
+        FSMConfiguration();
+    }
+    //IA2-P3
+    public void FSMConfiguration()
+    {
+        var move = new State<EnemyStates>("Move");
+        var seachWP = new State<EnemyStates>("SeachWP");
+        var attack = new State<EnemyStates>("FirstAttack");
+        var secondAttack = new State<EnemyStates>("SecondAttack");
+        var die = new State<EnemyStates>("Dead");
+
+        StateConfigurer.Create(seachWP)
+            .SetTransition(EnemyStates.move, move)
+            .SetTransition(EnemyStates.die, die)
+            .Done();
+
+        StateConfigurer.Create(move)
+            .SetTransition(EnemyStates.searchNextWp, seachWP)
+            .SetTransition(EnemyStates.firstAttack, attack)
+            .SetTransition(EnemyStates.die, die)
+            .Done();
+
+        StateConfigurer.Create(attack)
+            .SetTransition(EnemyStates.secondAttack, secondAttack)
+            .SetTransition(EnemyStates.die, die)
+            .Done();
+
+        StateConfigurer.Create(die)
+            .Done();
+                       
+
+        move.OnUpdate += () =>
+        {
+            Move();
+
+            if (Vector3.Distance(this.transform.position, baseToAttack.transform.position) <= attackRange)
+                fsm.SendInput(EnemyStates.firstAttack);
+        };     
+
+        move.OnFixedUpdate += () =>
+        {
+            Move();
+        };
+
+        seachWP.OnEnter += (x) =>
+        {
+            currentWp = nextWp;
+            UpdateNext(currentWp);
+        };
+        seachWP.OnUpdate += () => fsm.SendInput(EnemyStates.move);
+
+        attack.OnEnter += (x) => DoAttack();
+
+        die.OnEnter += (x) =>
+        {
+            _rb.velocity = Vector3.zero;
+
+            StartCoroutine(Die());
+        };
+    
+
+        fsm = new EventFSM<EnemyStates>(move);
     }
 
     void MoveToNextWaypoint(Waypoint current)
@@ -69,10 +138,10 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
         var distance = Vector3.Distance(transform.position, nextWp.transform.position);
         if (distance <= 2 && !current.isBase)
         {
-            current = nextWp;
-            UpdateNext(current);
+            fsm.SendInput(EnemyStates.searchNextWp);
         }
     }
+
     void UpdateNext(Waypoint current)
     {
         if (current.isBase) return;
@@ -83,11 +152,17 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
         transform.forward = dir;
     }
 
-    public void OnFixedUpdate()
+    public void OnUpdate()
     {
-        Move();
+        fsm.Update();
     }
 
+    public void OnFixedUpdate()
+    {
+        fsm.FixedUpdate();
+    }
+
+    //IA2-P2
     IEnumerator UpdateGridCoRoutine()
     {
         while (true)
@@ -104,21 +179,9 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
 
     public void Move()
     {
-
-        if (Vector3.Distance(this.transform.position, baseToAttack.transform.position) <= attackRange)
-        {
-            StartCoroutine(DoAttack());
-        }
-        else
-        {
-            MoveToNextWaypoint(currentWp);
-        }
-
-        if (life <= 0)
-            _rb.velocity = Vector3.zero;
+        MoveToNextWaypoint(currentWp);        
 
         _rb.velocity = transform.forward * speed;
-
         anim.SetFloat("Speed", _rb.velocity.magnitude / startSpeed);
     }
 
@@ -133,23 +196,23 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
 
         if (life <= 0)
         {
-            StartCoroutine(Die());
+            fsm.SendInput(EnemyStates.die);
         }
     }
 
-    public IEnumerator DoAttack()
+    public void DoAttack()
     {
         transform.LookAt(baseToAttack.transform);
         anim.SetBool("Attack", true);
-        yield return new WaitForSeconds(0.5f);
         speed = 0;
-
+        anim.SetFloat("Speed", speed);
     }
 
     public IEnumerator Die()
     {
         isDead = true;
         anim.Play("Die");
+        UpdateManager.Instance.RemoveUpdate(this);
         UpdateManager.Instance.RemoveFixedUpdate(this);
         Main.Instance.enemyManager.RemoveEnemy(this);
         RestartableManager.Instance.RemoveRestarable(this);
@@ -179,11 +242,21 @@ public class Enemy : GridEntity, IFixedUpdate, IRestartable
 
     public void RestartFromLastWave()
     {
+        UpdateManager.Instance.RemoveUpdate(this);
         UpdateManager.Instance.RemoveFixedUpdate(this);
         RestartableManager.Instance.RemoveRestarable(this);
         Main.Instance.enemyManager.RemoveEnemy(this);
         
         Destroy(myLifeBar.lifeBar.gameObject);       
         Destroy(this.gameObject);
-    }
+    } 
+}
+
+public enum EnemyStates
+{
+    move,
+    searchNextWp,
+    firstAttack,
+    secondAttack,
+    die
 }

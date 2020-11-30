@@ -9,6 +9,10 @@ public class GridEntity : MonoBehaviour
     public Action OnDestroyed = delegate { };
     public bool onGrid;
 
+    public void Update()
+    {
+        
+    }
     public void UpdateGrid()
     {      
 	    OnMove(this);
