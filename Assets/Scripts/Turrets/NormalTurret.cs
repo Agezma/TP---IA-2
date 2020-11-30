@@ -17,5 +17,20 @@ public class NormalTurret : Turret
             bullet.target = enemy.transform;
 
         bullet.damage = damage;                
-    }    
+    }
+
+    public override void Update()
+    {
+        if (state.buildState != TurretState.state.built) return;
+
+
+        //IA2-P2
+        enemiesInRange = targetGrid.EnemyQuery(transform.position, radius).Where(x => !x.isDead).ToList();
+        var enemyToShoot = enemiesInRange.FirstOrDefault();
+        Aim(enemyToShoot);
+
+
+        waitReloadTime += Time.deltaTime;
+        DoShoot(enemyToShoot);
+    }
 }

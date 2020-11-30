@@ -15,7 +15,7 @@ public abstract class Turret : MonoBehaviour
 
     [HideInInspector] public EnemyManager enemyManager;
 
-    TurretState state;
+    protected TurretState state;
 
     public string TurretName;
     public string Description;
@@ -48,7 +48,8 @@ public abstract class Turret : MonoBehaviour
             partToRotate.transform.LookAt(new Vector3(enemy.transform.position.x, transform.position.y, enemy.transform.position.z));
         }
     }
-    private void Update()
+
+    public virtual void Update()
     {
         if (state.buildState != TurretState.state.built) return;
         
@@ -69,26 +70,29 @@ public abstract class Turret : MonoBehaviour
             Shoot(enemy);
             waitReloadTime = 0;
         }
-    }      
+    }
 
-    public List<Enemy> FilterEnemysMaxLife()
+    //IA2-P1
+    //Estan aplicadas cada una en su torreta, pero las dejamos aca para que te sea mas rapido verlas
+
+    public Enemy FileterByHitted()
     {
-        return enemiesInRange.OrderBy(x => x.life).ToList();
+        return enemiesInRange.SkipWhile(x => x.life < x.startLife).FirstOrDefault();
     }
 
     public Enemy FilterByMaxLife()
     {
-        return enemiesInRange.OrderBy(x => x.life).First();
+        return enemiesInRange.OrderBy(x => x.life).FirstOrDefault();
     }
 
-    public List<Enemy> FilterEnemysMaxMoney()
+    public Enemy FilterByMissileTurret()
     {
-        return enemiesInRange.OrderBy(x => x.moneyReward).ToList();
+        return enemiesInRange.OfType<Dragon>().Concat(enemiesInRange.SkipWhile(x => x.life < x.startLife)).OrderBy(x => x.life).FirstOrDefault();
     }
 
-    public List<Enemy> FilterEnemysShootOnlyOnce()
+    public Enemy FilterEnemysMaxMoney()
     {
-        return enemiesInRange.Skip(1).ToList();
+        return enemiesInRange.OrderBy(x => x.moneyReward).FirstOrDefault();
     }
 
     /*public List<Enemy> EnemysInRangeFilter()
@@ -107,10 +111,10 @@ public abstract class Turret : MonoBehaviour
     /*
      * select:			            	(V)
         where:				            (V)
-        aggregate:			            (?)
+        aggregate:			            (V)
         orderBy:			            (V)
         selectMany/Concat:		        ()
-        zip:				            (?)
+        zip:				            (V)
         take/TakeWhile/Skip/SkipWhile:	(V)
 */
 }

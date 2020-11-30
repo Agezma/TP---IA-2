@@ -11,6 +11,22 @@ public class LaserTurret : Turret
         prefabBullet.damage = damage;
         prefabBullet.speed = reloadTime;
     }
+
+    public override void Update()
+    {
+        if (state.buildState != TurretState.state.built) return;
+
+
+        //IA2-P2
+        enemiesInRange = targetGrid.EnemyQuery(transform.position, radius).Where(x => !x.isDead).ToList();
+        var enemyToShoot = FilterByMaxLife();
+        Aim(enemyToShoot);
+
+
+        waitReloadTime += Time.deltaTime;
+        DoShoot(enemyToShoot);
+    }
+
     public override void DoShoot(Enemy enemy)
     {
         //IA2-P1 linq? aunque el any no era necesario

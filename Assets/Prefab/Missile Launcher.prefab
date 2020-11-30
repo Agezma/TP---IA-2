@@ -185,18 +185,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1542c4424fbca048b26aba1380a6481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reloadTime: 2.5
-  damage: 2
+  reloadTime: 2
+  damage: 4
   range: 20
   bulletSpawnPos: {fileID: 8912512044623694232}
   partToRotate: {fileID: 852895900746679860}
-  enemiesInRange: []
-  enemies: []
   enemyManager: {fileID: 0}
   TurretName: 'Bomb Launcher    Cost: 25'
-  Description: Low fire rate, deals area damage
+  Description: Low fire rate, deals area damage, \n Focuses non damaged enemys
+  filterSelected: 
+  filterInfo: 
   prefabBullet: {fileID: 7614069869812934128, guid: b7451d0980edd5342912bd47fa237035,
     type: 3}
+  radius: 20
+  targetGrid: {fileID: 0}
 --- !u!1 &8912512044623205820
 GameObject:
   m_ObjectHideFlags: 0

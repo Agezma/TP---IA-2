@@ -287,14 +287,15 @@ MonoBehaviour:
   range: 25
   bulletSpawnPos: {fileID: 2110181319097923089}
   partToRotate: {fileID: 879133480645990558}
-  enemiesInRange: []
-  enemies: []
   enemyManager: {fileID: 0}
   TurretName: 'Normal Turret    Cost: 15'
-  Description: Standard turret. Low damage, high range
+  Description: Standard turret. Low damage, high range, \n Focuses the first enemy
+  filterSelected: 
+  filterInfo: 
   prefabBullet: {fileID: -4444545684210812630, guid: e020e6b81880c7949aacab99f47ccda8,
     type: 3}
-  myQuery: {fileID: 6555875606967098022}
+  radius: 20
+  targetGrid: {fileID: 0}
 --- !u!114 &7061765733359405429
 MonoBehaviour:
   m_ObjectHideFlags: 0

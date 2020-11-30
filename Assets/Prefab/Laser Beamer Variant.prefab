@@ -271,12 +271,14 @@ MonoBehaviour:
   range: 15
   bulletSpawnPos: {fileID: 6520062100035849018}
   partToRotate: {fileID: 1370688300172860447}
-  enemiesInRange: []
-  enemies: []
   enemyManager: {fileID: 0}
   TurretName: 'Laser Turret    Cost: 40'
-  Description: Low range, very high damage
+  Description: Low range, very high damage, \n Focuses More HP
+  filterSelected: 
+  filterInfo: 
   prefabBullet: {fileID: 5023632681024041891}
+  radius: 20
+  targetGrid: {fileID: 0}
 --- !u!1 &9170941007451808239
 GameObject:
   m_ObjectHideFlags: 0
