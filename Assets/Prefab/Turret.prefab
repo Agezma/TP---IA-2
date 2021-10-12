@@ -289,7 +289,7 @@ MonoBehaviour:
   partToRotate: {fileID: 879133480645990558}
   enemyManager: {fileID: 0}
   TurretName: 'Normal Turret    Cost: 15'
-  Description: Standard turret. Low damage, high range, \n Focuses the first enemy
+  Description: Standard turret. Low damage, high range. Focuses the first enemy
   filterSelected: 
   filterInfo: 
   prefabBullet: {fileID: -4444545684210812630, guid: e020e6b81880c7949aacab99f47ccda8,

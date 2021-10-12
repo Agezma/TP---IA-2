@@ -192,7 +192,7 @@ MonoBehaviour:
   partToRotate: {fileID: 852895900746679860}
   enemyManager: {fileID: 0}
   TurretName: 'Bomb Launcher    Cost: 25'
-  Description: Low fire rate, deals area damage, \n Focuses non damaged enemys
+  Description: Low fire rate, deals area damage. Focuses non damaged enemys
   filterSelected: 
   filterInfo: 
   prefabBullet: {fileID: 7614069869812934128, guid: b7451d0980edd5342912bd47fa237035,

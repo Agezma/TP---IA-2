@@ -20,7 +20,6 @@ public class TurretHolder : MonoBehaviour, IRestartable
 
     int currentTurretID = 0;
 
-
     void Start()
     {
         myChar = Main.Instance.player;
@@ -55,7 +54,7 @@ public class TurretHolder : MonoBehaviour, IRestartable
 
         infoPanel.myName.text = currentTurret.TurretName;
         infoPanel.info.text = currentTurret.Description;
-        infoPanel.filterSelected.text = currentTurret.filterInfo;
+
         infoPanel.gameObject.SetActive(true);
     }
 
@@ -107,24 +106,8 @@ public class TurretHolder : MonoBehaviour, IRestartable
 
         infoPanel.myName.text = currentTurret.TurretName;
         infoPanel.info.text = currentTurret.Description;
-        infoPanel.filterSelected.text = currentTurret.filterInfo;
-
     }
-    public void SelectFilter(int number)
-    {
-        if (number == 1)
-            infoPanel.filterSelected.text = currentTurret.filterInfo;
-
-        else if (number == 2)
-            infoPanel.filterSelected.text = currentTurret.filterInfo;
-
-        else if (number == 3)
-            infoPanel.filterSelected.text = currentTurret.filterInfo;
-
-        else if (number == 4)
-            infoPanel.filterSelected.text = currentTurret.filterInfo;
-
-    }
+    
 
     public float gizmorange;
     [ExecuteInEditMode]

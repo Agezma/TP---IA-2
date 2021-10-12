@@ -103,21 +103,12 @@ public class Console : MonoBehaviour
 
                 return acum + current.Item2;
             });
-
-        moneyToShowInUI.gameObject.SetActive(true);
-        moneyToShowInUI.text = "+ " + moneyAcumulated;
-        
+                
         consoleView.text += enemies.Count() + " enemigos eliminados \n";
 
-        StartCoroutine(ShowMoneyAgregated());
+        Main.Instance.moneyAdder.AddMoneyFeedback((int)moneyAcumulated);
     }
-
-    public IEnumerator ShowMoneyAgregated()
-    {
-        yield return new WaitForSeconds(4);
-        moneyToShowInUI.gameObject.SetActive(false);
-    }
-
+    
     void Kill(params object[] paramters)
     {
         var enemies = Main.Instance.enemyManager.enemiesAlive
@@ -137,7 +128,7 @@ public class Console : MonoBehaviour
 
         consoleView.text += enemies.Count() + " enemigos eliminados \n";
 
-        StartCoroutine(ShowMoneyAgregated());
+        Main.Instance.moneyAdder.AddMoneyFeedback((int)moneyAcumulated);
     }
 
     void ChangeScene(params object[] paramters)

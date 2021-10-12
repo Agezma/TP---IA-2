@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public MobileController mobilePad;
     public GameObject winPanel;
     public SpatialGrid spatialGrid;
+    public ShowMoney moneyAdder;
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         Main.Instance.mobilePad = mobilePad;
         Main.Instance.winPanel = winPanel;
         Main.Instance.spatialGrid = spatialGrid;
+        Main.Instance.moneyAdder = moneyAdder;
 
         UpdateManager.Instance.Initialize();
         RestartableManager.Instance.Initialize();

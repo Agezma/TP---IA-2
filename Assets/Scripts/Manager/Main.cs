@@ -32,4 +32,5 @@ public class Main
     public MobileController mobilePad;
     public GameObject winPanel;
     public SpatialGrid spatialGrid;
+    public ShowMoney moneyAdder;
 }

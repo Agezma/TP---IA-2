@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Manager\RestartableManager.cs" />
     <Compile Include="Assets\Scripts\RangedEnemy.cs" />
     <Compile Include="Assets\Scripts\ScreenMouse.cs" />
+    <Compile Include="Assets\Scripts\ShowMoney.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\Turrets\BuildTurret.cs" />
     <Compile Include="Assets\Scripts\Turrets\InfoTurret.cs" />

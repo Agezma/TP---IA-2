@@ -273,7 +273,7 @@ MonoBehaviour:
   partToRotate: {fileID: 1370688300172860447}
   enemyManager: {fileID: 0}
   TurretName: 'Laser Turret    Cost: 40'
-  Description: Low range, very high damage, \n Focuses More HP
+  Description: Low range, very high damage. Focuses More HP
   filterSelected: 
   filterInfo: 
   prefabBullet: {fileID: 5023632681024041891}
