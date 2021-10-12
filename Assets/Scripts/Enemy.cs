@@ -228,10 +228,11 @@ public class Enemy : GridEntity,IUpdate, IFixedUpdate, IRestartable
         //Main.Instance.mouseLock.UnlockMouse();
 
         OnDestroyed.Invoke();
+        myMoney.money += moneyReward;
+        Main.Instance.moneyAdder.AddMoneyFeedback((int)moneyReward);
 
         yield return new WaitForSeconds(deathAnimTime);
 
-        myMoney.money += moneyReward;
         Destroy(this.gameObject);
     }
 
